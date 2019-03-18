@@ -1,6 +1,7 @@
 # ETPS
 Real-Time Coarse-to-fine Topologically Preserving Segmentation by Jian Yao, Marko Boben, Sanja Fidler, Raquel Urtasun
 
+```
 ===== LICENSE =====
 
 Copyright (C) 2015  Jian Yao, Marko Boben, Sanja Fidler and Raquel Urtasun
@@ -47,3 +48,4 @@ and the following paper (the SGM part of our code adopts this implementation):
     booktitle = {ECCV},
     year = {2014}
 }
+```
