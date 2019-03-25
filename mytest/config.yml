@@ -2,7 +2,7 @@
 
 # Number of superpixels
 
-superpixelNum: 1500
+superpixelNum: 100
 batchProcessing: 0
 
 # Energy weights for energy terms in Equation (1) from the paper
