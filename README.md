@@ -1,6 +1,8 @@
 # ETPS
 Real-Time Coarse-to-fine Topologically Preserving Segmentation by Jian Yao, Marko Boben, Sanja Fidler, Raquel Urtasun
 
+## Warning: this rep is not the original ETPS.
+## I apply it to other topic!!
 ```
 ===== LICENSE =====
 
