@@ -3,14 +3,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_frames = "sample_data/frames/"
-input_colmap = "sample_data/reconstruction/"
-output_folder = "output/"
-recon = ReadColMap.ReadColmap(input_colmap, input_frames)
-
-global_h = 0
-global_w = 0
-
 class patch:
     def __init__(self):
         self.idx = -1
@@ -19,6 +11,7 @@ class patch:
         self.featureRows = []
         self.featureCols = []
         self.featureDepth = []
+        self.featureNumber = 0
 
     def Print(self):
         print('Patxh Number: ', self.idx)
@@ -31,7 +24,7 @@ class patch:
 # The conresponding idx in Views is 28
 # 26.png -> idx 24
 # 29.png -> idx 28
-def initialTest():
+def initialTest(input_frames, recon):
     testFrameidx = 28
     testfile = "000029"
     testCase = recon.views[testFrameidx]
@@ -43,15 +36,13 @@ def initialTest():
     global_h = h
     global_w = w
     sparseDepthImg = np.zeros((h, w, ch))
-    print(sparseDepthImg.shape)
+    #print(sparseDepthImg.shape)
     for key, value in testCase.points2d.items():
         cv2.circle(sparseDepthImg, (int(value[0]), int(value[1])), 15, (0,0,255), -1)
 
     cv2.imwrite(testfile+"_sparse.png",sparseDepthImg)
     depthSparse = recon.GetSparseDepthMap(testFrameidx)
-    return depthSparse
-
-sparseDepthMap = initialTest()
+    return depthSparse, h, w
 
 def constructPatches(inputSparseDepth):
     print('**************start construct patches*****************')
@@ -85,7 +76,6 @@ def constructPatches(inputSparseDepth):
         #nowPatch.Print()
     return patches
 
-sortPatches = constructPatches(sparseDepthMap)
 
 def constructCoarseDepthMap(patches):
     CoarseDepthMap = np.zeros((global_h,global_w))
@@ -96,13 +86,12 @@ def constructCoarseDepthMap(patches):
                 CoarseDepthMap[row,col] = currentPatch.featureDepth[0]
             else:
                 CoarseDepthMap[row,col] = 0
-    print(CoarseDepthMap[np.nonzero(CoarseDepthMap)])
+    #print(CoarseDepthMap[np.nonzero(CoarseDepthMap)])
     return CoarseDepthMap
 
 
 
-CoarseDepthMap = constructCoarseDepthMap(sortPatches)
-plt.imsave("CoarseDepthMap.png", CoarseDepthMap, cmap = 'seismic')
+
 '''
 plt.imshow(CoarseDepthMap, cmap='gray')
 plt.show()
@@ -113,3 +102,18 @@ cv2.destroyWindow("CoarseDepthMap")
 
 cv2.imwrite("CoarseDepthMap.png",CoarseDepthMap)
 '''
+def main():
+    input_frames = "sample_data/frames/"
+    input_colmap = "sample_data/reconstruction/"
+    output_folder = "output/"
+    recon = ReadColMap.ReadColmap(input_colmap, input_frames)
+
+    global_h = 0
+    global_w = 0
+    sparseDepthMap,h ,w = initialTest(input_frames, recon)
+    sortPatches = constructPatches(sparseDepthMap)
+    CoarseDepthMap = constructCoarseDepthMap(sortPatches)
+    #plt.imsave("CoarseDepthMap.png", CoarseDepthMap, cmap = 'seismic')
+
+if __name__ == '__main__':
+    main()
